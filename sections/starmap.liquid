@@ -1,0 +1,988 @@
+{% assign current_variant = product.selected_or_first_available_variant %}
+<style>
+  .nav-pills .nav-link.active, #nextBtn,.btn-modal.active,.btn-gold,button#cartBut {
+    background-color: #000000 !important;
+  }
+  .element-tiles label>input[type=checkbox]:checked+img, .element-tiles label > input[type=checkbox]:checked + img, .bg-tiles input[type=radio]:checked + label, .bg-tiles input[type=radio]:checked + label,.color-tiles label > input:checked + img,.bg-tiles input[type=radio]:checked + label{
+    outline: 2px solid #000000 !important;
+  }
+
+  button#confirmSaying, .btn-modal.active, button#nextBtn, button#cartBut{
+    border:1px solid #000000 !important;
+  }
+</style>
+<div id="page" style="display: none" class="hfeed site">
+  <div id="content" class="site-content" tabindex="-1">
+    <div id="loader">
+      <div class="lds-css ng-scope">
+        <div class="lds-eclipse">
+          <div> </div>
+        </div>
+      </div>
+    </div>
+    <div id="rotate" style="display: none;"> 
+      <img id="horizontal" src="https://starymap.com/wp-content/themes/flatsome-child/assets/editor-orientation-horizontal-icon-256x256.png" alt="Gerät Horizontal halten" style="display: none;"> 
+      <img id="vertical" src="https://starymap.com/wp-content/themes/flatsome-child/assets/editor-orientation-vertical-icon-256x256.png" alt="Gerät Vertikal halten" style="display: none;"> </div>
+    <div class="container-fluid" id="editor" style="display: block;">
+      <div class="row" id="my-row">
+        <div class="poster-container col-12 col-lg-8 col-xl-9">
+          <div class="row justify-content-center logo-container hide-on-desktop">
+            <a id="logoURLMobile" href="/"> <center>
+              <img src="mylogo.png" alt="Home">
+              </a></center>
+          </div>
+          <div id="print" class="mt-4">
+
+            <div class="custom-frame bg-new shadow text-center p-3" style="background-color:#000;font-family:  Spectral, serif;">
+
+              <div class="pt-2 pb-1 frame-container pl-0 pr-0" style="">
+                <div id="watermark">Sky Map Preview
+                  <div style="font-size: 0.75rem;">(This text will not appear on the printed map)</div></div>
+
+                <div id="celestial-map" class="" style="width:280px;height:auto !important">
+                  <div class="custom_iframe">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svgLayer" x="0px" y="0px" viewBox="0 0 400 400" style="enable-background:new 0 0 400 400;" xml:space="preserve" class="editor-color-53 small-little">
+                      <style type="text/css">
+                        .st0{fill:#ffffff;}
+
+                        .editor-color-1 .st0{fill:#ffffff;}
+                        .editor-custom-color1-whitewhite .st0{fill:#a9a9a9;}
+                        .editor-color-52 .st0{fill:#ffffff;}
+                        .editor-color-53 .st0{fill:#ffffff;}
+                        .star-editor-gradient-1 .st0{fill:none;}
+                        .star-editor-gradient-2 .st0{fill:none;}
+                        .star-editor-gradient-3 .st0{fill:none;}
+
+                        .editor-color-1 .st1{fill:#FFFFFF;}
+                        .editor-custom-color1-whitewhite .st1{fill:#FFFFFF;}
+                        .editor-color-52 .st1{fill:#FFFFFF;}
+                        .editor-color-53 .st1{fill:#000;}
+                        .editor-color-11 .st1{fill:#000000;}
+                        .editor-color-47 .st1{fill:#191d29;}
+                        .editor-color-48 .st1{fill:#0f404c;}
+                        .editor-color-26 .st1{fill:#3b4248;}
+                        .editor-color-49 .st1{fill:#280a2e;}
+                        .editor-color-56 .st1{fill:#ffffff;}
+                        .star-editor-gradient-1 .st1{fill:#ffffff;}
+                        .star-editor-gradient-2 .st1{fill:#ffffff;}
+                        .star-editor-gradient-3 .st1{fill:#080327;}
+                      </style>
+                      <g>
+                        <path class="st1 cust" d="M0,0v400h400V0H0z M199.9,393.7C93,393.7,6.3,307,6.3,200.1S93,6.6,199.9,6.6s193.6,86.7,193.6,193.6   S306.8,393.7,199.9,393.7z"/>
+                      </g>
+                      <g>
+                        <path class="st0 bor" d="M199.9,394.9C92.5,394.9,5.1,307.5,5.1,200.1S92.5,5.3,199.9,5.3c107.4,0,194.8,87.4,194.8,194.8   S307.3,394.9,199.9,394.9z M199.9,7.8C93.9,7.8,7.6,94.1,7.6,200.1c0,106,86.3,192.3,192.3,192.3s192.3-86.3,192.3-192.3   C392.2,94.1,305.9,7.8,199.9,7.8z"/>
+                      </g>
+                    </svg>
+                  </div>
+                  <img id="bg-img-new" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/download_9.png?v=1624528533" 
+                       style="position: absolute; 
+                              top: 90%; 
+                              left: 51%; 
+                              border-radius: 50%; 
+                              transform: translate(-50%, -50%); 
+                              z-index: 104; 
+                              height: 40%; 
+                              width: 40%; 
+                              display: none;">
+                </div>
+
+                <div class="custom-textarea my-1 w-100" style="min-height:10vh" rows="5">You are made of stardust<br>
+                  and wishes and magical things
+                  <br><br>
+                  ❤ 
+                </div>
+                <div class="custom-address mt-2 mb-1"><span id="skyMap">Sky Map</span><br />
+                <span id="custom_date"></span>
+                  {% comment %} <span id="custom_day">23</span><span id="custom_dtag" style="text-transform:lowercase;">rd</span> <span id="custom_mon">March</span> <span id="custom_yer">1998</span>
+                  <span id="yes_no_time"> - <span id="custom_hr">10</span>:<span id="custom_min">45</span> <span id="custom_ttag" style="text-transform:uppercase;">AM</span></span>  {% endcomment %}
+                  <br>
+                  <span id="custom_add">Paris, France</span>
+                  <br>
+
+                  <span id="custom_lat">28.65˚ N</span><span style="margin-left:8px" id="custom_lng">64.55˚ W</span>
+                  <div id="qrcode"></div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-end form-group label-container">
+
+            <div class="col-6 text-center">
+              <label class="dimension hideMobile mt-3"><small id="__dimensions">50 x 70 cm (40 JOD)</small></label>
+            </div>
+            <div class="col-3"> <a class="cart pulse" style="display: none;"><span class="counter">+</span></a> </div>
+          </div>
+        </div>
+        <div class="form-container col-12 col-lg-4 col-xl-3 mp-4" id="my-frm-cont">
+          <div class="row justify-content-center logo-container hide-on-mobile">
+            <a id="logoURLDesktop" href="/"> 
+              <img src="mylogo.png" alt="Home"> </a>
+          </div>
+          <div id="scroll"><i class="fa fa-arrow-up" aria-hidden="true"></i></div>
+          <nav class="nav nav-pills nav-justified steps">
+            <a class="step step-1 nav-item nav-link active" id="__textModel">Model</a>
+            <a class="step step-2 nav-item nav-link" id="__textMoment">Moment</a>
+            <a class="step step-3 nav-item nav-link" id="__textDesign">Design</a>
+            <a class="step step-4 nav-item nav-link" id="__textProduct">Product</a>
+          </nav>
+          <input type="hidden" id="json_data" value="" name="json_data">
+          <div class="tabs-container">
+            <div class="tab viewed">
+              <div class="row-container" id="nav-Model" role="tabpanel" aria-labelledby="nav-Model-tab">
+
+                <div class="options row">
+                  <div class="col-5">
+                    <div data-starmap="lines">
+                      <input class="d-none form-check-input" type="radio" id="regular-one" name="notaswitch-two" value="regular" checked="">
+                      <label for="regular-one" class="cb">
+                        <div class="elements elements-color border rounded p-4 bg-new" style="background: url('dqw');width: 118px;height: 162px;position:relative">
+                          <!-- 	<span class="ml-1 font-weight-bold" style="position: absolute;top: 50%;text-align: center;color: white;left: 50%;width: 100%;transform: translate(-50%, -50%);padding: 4px">Harta Stelelor</span> -->
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-7" style="position: relative">
+                    <span class="ml-1 font-weight-bold text-center" style="position: absolute;top: 50%;left: 50%;width: 100%;transform: translate(-50%, -50%);padding: 4px">Star Map with classic colors</span>
+                  </div>
+                </div>
+                <div class="options row">
+                  <div class="col-5">
+                    <div data-starmap="lines">
+                      <input class="d-none form-check-input" type="radio" id="custom-image" name="notaswitch-two" value="custom-image">
+                      <label for="custom-image" class="cb">
+                        <div class="elements elements-color border rounded p-4 bg-new" style="background: url('dew');width: 118px;height: 162px;position:relative">
+                        </div>
+                      </label>
+
+                    </div>
+                  </div>
+                  <div class="col-7" style="position: relative">
+                    <span class="ml-1 font-weight-bold text-center" style="position: absolute;top: 50%;left: 50%;width: 100%;transform: translate(-50%, -50%);padding: 4px">Star Map with custom image</span>
+                  </div>
+                </div>
+                <div class="options row">
+                  <div class="col-5">
+                    <div data-starmap="lines">
+                      <input class="d-none form-check-input" type="radio" id="background-image" name="notaswitch-two" value="background-image">
+                      <label for="background-image" class="cb">
+                        <div class="elements elements-color border rounded p-4 bg-new" style="background: url('dew');width: 118px;height: 162px;position:relative">
+                          <!-- 	<span class="ml-1 font-weight-bold" style="position: absolute;top: 50%;text-align: center;color: white;left: 50%;width: 100%;transform: translate(-50%, -50%);padding: 4px">Harta Stelelor cu Fundal</span> -->
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-7" style="position: relative">
+                    <span class="ml-1 font-weight-bold text-center" style="position: absolute;top: 50%;left: 50%;width: 100%;transform: translate(-50%, -50%);padding: 4px">Star Map with Backgrounds</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="tab">
+              <div class="row-container">
+                <label><strong id="__subheaderPlace">Location of your moment</strong></label>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-prepend"> <span class="input-group-text"><i class="fa fa-globe fa-fw"></i></span> </div>
+                    <input class="form-control pac-target-input" id="address_form1" type="text" name="place" autocomplete="off" required="" placeholder="Search your location"> </div>
+                </div>
+                <label><strong id="__subheaderDateTime">Date & Time</strong></label>
+                <div class="form-row">
+                  <div class="form-group col-8 mb-1">
+                    <div class="input-group">
+                      <div class="input-group-prepend"> <span class="input-group-text" id="DateGroupPrepend"><i class="fa fa-calendar fa-fw"></i></span> </div>
+                      <input type="hidden" class="form-control flatpickr-input" id="textDatetime" value="" autocomplete="off" readonly="true" aria-describedby="DateGroupPrepend" required="" placeholder="Select your date"><input class="form-control flatpickr-input form-control input" placeholder="Select your date" required="" type="text" readonly="readonly"> </div>
+                  </div>
+                  <div class="form-group col-4 mb-1">
+                    <div class="input-group">
+                      <input type="text" class="form-control flatpickr-input" id="inputTime" step="60" value="00:00" placeholder="12:00 AM" aria-describedby="TimeGroupPrepend" required="" readonly="readonly"> </div>
+                  </div>
+
+                  
+                </div>
+                
+                                  
+                  <div class="row" style="margin-top: -5px;">
+                    <div class="col-8">
+                      <label class="notes" id="lblTime" style=""><small id="__textTime">Date of Moment</small></label>
+                    </div>
+                    <div class="col-4 pl-0">
+                      <label class="notes" id="lblTime" style=""><small id="__textTime">Time of Moment</small></label>
+                    </div>
+                  </div>
+          
+                <div class="form-group">
+                  <label><strong id="__subheaderMessage">Custom Message</strong></label>
+
+                  <label class="notes float-right mt-3"><small><a id="__textInspiration" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-lightbulb-o" aria-hidden="true"></i> Suggestions</a></small></label>
+                  <textarea class="form-control" id="textMessage" name="textMessage" rows="5" maxlength="300" autocomplete="off" placeholder="Write your message" spellcheck="false" style="height: 113px !important;"></textarea>
+                  <label class="notes float-right mt-0"><small id="messageRows">Lines: <span id="messageRows1">0/5</span></small></label>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label-left title-submenu" for="qrCode" id="__subheaderShowQr">Add QR Code<br><small>You can add a link to a song on youtube or any website</small></label>
+                  <div class="controls">
+                    <input data-on="Yes" data-off="No" id="qrCode" onchange="if(this.checked){$('.qr-input').fadeIn();if($('#qr-input').val()){makeCode()}}else{$('.qr-input').fadeOut();qrcode.clear()};" type="checkbox" name="qr" data-toggle="toggle" data-onstyle="secondary">
+                    <div class="qr-input"  style="display: none">
+                      <label class="notes mt-3" for="qr-input">
+                        <strong>QR URL</strong>
+                      </label>
+                      <input type="text" id="qr-input" class="form-control" oninput="makeCode(this)" name="qr_url" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="accordion-step1">
+                <div class="card">
+                  <div class="card-header collapsed" id="moment" data-toggle="collapse" data-target="#collapseMoment" aria-expanded="false" aria-controls="collapseMoment">
+                    <p class="panel-title accordion-toggle"><strong id="__subheaderOptions">More options</strong></p>
+                  </div>
+                  <div id="collapseMoment" class="collapse" aria-labelledby="moment" data-parent="#accordion-step1">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label class="control-label-left title-submenu" for="textTitle" id="__subheaderTitle">Title</label>
+                        <label class="notes" id="lblNoteTitle" style="display: none;"><small id="__noteTitle">Leave empty to remove.</small></label>
+                        <div class="controls">
+                          <input class="form-control" id="textTitle" oninput="changeTitle(this.value)" name="title" type="text" data-role="text" autocomplete="off" value="Sky Map" placeholder="Choose a title"> </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label-left title-submenu" for="textLocation" id="__subheaderTitlePlace">Location name</label>
+                        <label class="notes" id="lblNotePlace" style="display: none;"><small id="__notePlace">Leave empty to remove.</small></label>
+                        <div class="controls">
+                          <input class="form-control" onchange="changeLocationData(this.value)" id="textLocation" type="text" name="titlePlace" data-role="text" autocomplete="off" placeholder="Choose a location"> </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label-left title-submenu" for="textLocation" id="__subheaderTitlePlace01">Date & Time</label>
+                        <label class="notes" id="lblNotePlac34e" style="display: none;"><small id="__notePlace">Leave empty to remove.</small></label>
+                        <div class="controls">
+                      <input type="text" class="form-control" placeholder="Date Text" maxlength="62" onchange="changeDateData(this.value)" id="mat-input-7">
+                      </div> 
+                      </div> 
+                      <div class="form-group">
+                        <label class="control-label-left title-submenu" for="time" id="__subheaderShowTime">Show Time</label>
+                        <div class="controls">
+                          <input id="time" data-on="Yes" data-off="No" onchange="if(this.checked){$('#hideTime').show(0)}else{$('#hideTime').hide(0)};unknownTime(this);" type="checkbox" name="time" data-toggle="toggle" data-onstyle="secondary" checked="">
+                        </div>
+                      </div>
+                      <div class="form-group d-none">
+                        <label class="control-label-left title-submenu" for="coordinates" id="__subheaderCoordinates">Show coordinates</label>
+                        <div class="controls">
+                          <input checked onchange="remove_coor(this.checked)" id="coordinates" type="checkbox" name="coordinates" data-toggle="toggle" data-onstyle="secondary">
+
+                        </div>
+                      </div>
+                      <div class="form-row" id="coordinates-container" style="display: none;">
+                        <div class="form-group col-6 mb-1">
+                          <label class="title-submenu" for="latitude" id="__latitude">Latitude</label>
+                          <div class="input-group">
+                            <input id="latitude" class="form-control" type="number" placeholder="0.0000" name="latitude" step="0.0001" min="0" max="90" required="">
+                            <div class="input-group-addon">
+                              <select class="form-control" id="latitudeDirection" name="direction"> <option selected="selected" value="1" id="N">N</option><option value="2" id="S">S</option></select>
+                            </div>
+                          </div>
+                          <p class="notes mt-1 mb-1" id="noteLatitude"><small id="__noteLatitude">Please select a valid value.</small></p>
+                        </div>
+                        <div class="form-group col-6 mb-1">
+                          <label class="title-submenu" for="longitude" id="__longitude">Longitude</label>
+                          <div class="input-group">
+                            <input id="longitude" class="form-control" type="number" placeholder="0.0000" name="longitude" step="0.0001" min="0" max="180" required="">
+                            <div class="input-group-addon">
+                              <select class="form-control" id="longitudeDirection" name="direction"> <option selected="selected" value="3" id="E">E</option><option value="4" id="W">W</option></select>
+                            </div>
+                          </div>
+                          <p class="notes mt-1 mb-1" id="noteLongitude"><small id="__noteLongitude">Please select a valid value.</small></p>
+                        </div>
+                        <div class="col">
+                          <label class="notes"><small id="__noteCoordinates" style="display: none;">Note: Changes to the coordinates and cardinals will change the location and the visible night sky.</small></label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab">
+              <div class="row-container">
+                <div class="hide-1 my-3">
+                  <label class="subheader">Upload the image</label>
+                  <input type="file" id="my-img-input" class="" name="properties[image]" accept="image/png, image/jpeg" autocomplete="new-password">
+                </div>
+                <label class="subheader" id="__subheaderElements">Choose the elements of the star map</label>
+                <div class="row form-group">
+                  <div class="col-3 element-tiles">
+                    <label for="celestialConstellation">
+                      <input id="celestialConstellation" onchange="change_constellations()" type="checkbox" name="elements" checked> 
+                      <img class="img-fluid" src="dwe" alt="Sternenkartenelement Konstellationen">
+                    </label>
+                    <label class="label-elements"><small id="__labelConnstellations">Constellations</small></label>
+                  </div>
+
+                  <div class="col-3 element-tiles">
+                    <label for="celestialConstellationNames">
+                      <input id="celestialConstellationNames" onchange="change_constellations_names()" type="checkbox" name="elements"> 
+                      <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/constellation_1.png?v=1640537077" alt="Sternenkartenelement Konstellationen">
+                    </label>
+                    <label class="label-elements"><small id="__labelConnstellations">Constellations name</small></label>
+                  </div>
+
+
+                  <div class="col-3 element-tiles">
+                    <label for="celestialGri">
+                      <input id="celestialGri" onchange="show_grid()" type="checkbox" name="elements"> 
+                      <img class="img-fluid" src="https://starymap.com/wp-content/themes/flatsome-child/assets/grid-night-sky-grid-stars-256-full.png" alt="Sternenkartenelement Gitternetz"> 
+                    </label>
+                    <label class="label-elements"><small id="__labelGrid">Grid</small></label>
+                  </div>
+                  <div class="col-3 element-tiles">
+                    <label for="celestialMilkyWay">
+                      <input onchange="show_milkyway()" id="celestialMilkyWay" type="checkbox" name="elements"> 
+                      <img class="img-fluid" src="https://starymap.com/wp-content/themes/flatsome-child/assets/milky-way-night-sky-grid-stars-256-full.png" alt="Sternenkartenelement Milchstraße"> 
+                    </label>
+                    <label class="label-elements"><small id="__labelMilkyway">Milkyway</small></label>
+                  </div>
+                  <div class="col-3 element-tiles">
+                    <label for="celestialMoo">
+                      <input onchange="show_moon()" checked id="celestialMoo" type="checkbox" name="elements"> 
+                      <img class="img-fluid" src="https://starymap.com/wp-content/themes/flatsome-child/assets/moon-night-sky-grid-stars-256-full.png" alt="Sternenkartenelement Mond"> 
+                    </label>
+                    <label class="label-elements"><small id="__labelMoon">Moon</small></label>
+                  </div>
+                </div>
+                <label class="subheader" id="__subheaderFont">Choose a font</label>
+                <div class="row form-group">
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_1">
+                    <input checked="checked" onchange="font_change(this.value)" class="fontType" id="fonts1" type="radio" name="fontTypeSaying" value="'Spectral', serif">
+                    <label id="font3" for="fonts1" style="font-family:'Spectral', serif">Abc</label>
+                  </div>
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_2">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts2" type="radio" name="fontTypeSaying" value="'Dancing Script', cursive">
+                    <label id="font1" for="fonts2" style="font-family:'Dancing Script', cursive">Abc</label>
+                  </div>
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_3">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts3" type="radio" name="fontTypeSaying" value="'Caveat', cursive">
+                    <label id="font2" for="fonts3" style="font-family:'Caveat', cursive">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide"  id="fon_4">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts4" type="radio" name="fontTypeSaying" value="'Indie Flower', cursive">
+                    <label id="font4" for="fonts4" style="font-family:'Indie Flower', cursive">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_5">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts5" type="radio" name="fontTypeSaying" value="'Cookie', cursive">
+                    <label id="font5" for="fonts5" style="font-family:'Cookie', cursive">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_6">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts6" type="radio" name="fontTypeSaying" value="'Cormorant Infant', serif">
+                    <label id="font6" for="fonts6" style="font-family:'Cormorant Infant', serif">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_7">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts7" type="radio" name="fontTypeSaying" value="'Anton', sans-serif">
+                    <label id="font7" for="fonts7" style="font-family:'Anton', sans-serif">Abc</label>
+                  </div>  
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_8">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts71" type="radio" name="fontTypeSaying" value="'Bree Serif', serif">
+                    <label id="font8" for="fonts71" style="font-family:'Bree Serif', serif">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_9">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts8" type="radio" name="fontTypeSaying" value="'Fredericka the Great', cursive">
+                    <label id="font9" for="fonts8" style="font-family:'Fredericka the Great', cursive">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_10">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts9" type="radio" name="fontTypeSaying" value="'Gilda Display', serif">
+                    <label id="font10" for="fonts9" style="font-family:'Gilda Display', serif">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_11">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts10" type="radio" name="fontTypeSaying" value="'Great Vibes', cursive">
+                    <label id="font11" for="fonts10" style="font-family:'Great Vibes', cursive">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_12">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts11" type="radio" name="fontTypeSaying" value="'IM Fell English SC', serif">
+                    <label id="font12" for="fonts11" style="font-family:'IM Fell English SC', serif">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_13">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts12" type="radio" name="fontTypeSaying" value="'Kaushan Script', cursive">
+                    <label id="font13" for="fonts12" style="font-family:'Kaushan Script', cursive">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_14">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts13" type="radio" name="fontTypeSaying" value="'Lavishly Yours', cursive">
+                    <label id="font14" for="fonts13" style="font-family:'Lavishly Yours', cursive">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_15">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts14" type="radio" name="fontTypeSaying" value="'Ms Madi', cursive">
+                    <label id="font15" for="fonts14" style="font-family:'Ms Madi', cursive">Abc</label>
+                  </div> 
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_16">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts15" type="radio" name="fontTypeSaying" value="'Noto Sans Arabic', sans-serif">
+                    <label id="font16" for="fonts15" style="font-family:'Noto Sans Arabic', sans-serif">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_17">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts16" type="radio" name="fontTypeSaying" value="'Noto Sans HK', sans-serif">
+                    <label id="font17" for="fonts16" style="font-family:'Noto Sans HK', sans-serif">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_18">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts17" type="radio" name="fontTypeSaying" value="'Noto Sans KR', sans-serif">
+                    <label id="font18" for="fonts17" style="font-family:'Noto Sans KR', sans-serif">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_19">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts18" type="radio" name="fontTypeSaying" value="'Oswald', sans-serif">
+                    <label id="font19" for="fonts18" style="font-family:'Oswald', sans-serif">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_20">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts19" type="radio" name="fontTypeSaying" value="'Poppins', sans-serif">
+                    <label id="font20" for="fonts19" style="font-family:'Poppins', sans-serif">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_21">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts20" type="radio" name="fontTypeSaying" value="'Prata', serif">
+                    <label id="font21" for="fonts20" style="font-family:'Prata', serif">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_22">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts21" type="radio" name="fontTypeSaying" value="'Qahiri', sans-serif">
+                    <label id="font22" for="fonts21" style="font-family:'Qahiri', sans-serif">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_23">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts22" type="radio" name="fontTypeSaying" value="'Reggae One', cursive">
+                    <label id="font23" for="fonts22" style="font-family:'Reggae One', cursive">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_24">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts23" type="radio" name="fontTypeSaying" value="'Righteous', cursive">
+                    <label id="font24" for="fonts23" style="font-family:'Righteous', cursive">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_25">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts24" type="radio" name="fontTypeSaying" value="'Sacramento', cursive">
+                    <label id="font25" for="fonts24" style="font-family:'Sacramento', cursive">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_26">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts25" type="radio" name="fontTypeSaying" value="'UnifrakturMaguntia', cursive">
+                    <label id="font26" for="fonts25" style="font-family:'UnifrakturMaguntia', cursive">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_27">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts26" type="radio" name="fontTypeSaying" value="'Vibes', cursive">
+                    <label id="font27" for="fonts26" style="font-family:'Vibes', cursive">Abc</label>
+                  </div>
+
+                  <div class="col-3 bg-tiles fonts-hide" id="fon_28">
+                    <input onchange="font_change(this.value)" class="fontType" id="fonts27" type="radio" name="fontTypeSaying" value="'Water Brush', cursive">
+                    <label id="font28" for="fonts27" style="font-family:'Water Brush', cursive">Abc</label>
+                  </div>
+                </div>
+
+                <div id="show-on-3">
+                  <label class="subheader" id="__subheaderMapColor">Select Shape</label>
+                  <div class="options row">
+                    <div class="col-3 bg-tiles">
+                      <div>
+                        <input type="radio" name="shape" onchange="change_shape(this)" checked="" id="cb17">
+                        <label for="cb17" class="">
+                          <div class="elements-color rounded p-4" 
+                               style="background:url('https://starymap.com/wp-content/uploads/2021/11/4.png'); 
+                                      background-size: contain;  
+                                      background-repeat: no-repeat;
+                                      background-position: center;">
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-3 bg-tiles">
+                      <div>
+                        <input type="radio" name="shape" onchange="change_shape(this)" id="cb54" />
+                        <label for="cb54" class="cb">
+                          <div class="elements-color rounded p-4" 
+                               style="background:url('https://cdn.shopify.com/s/files/1/0511/8522/1811/files/Screenshot_from_2021-03-25_20-16-06-removebg-preview.png?v=1639508692');
+                                      background-size: contain;background-repeat: no-repeat;background-position: center;">
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-3 bg-tiles">
+                      <div>
+                        <input type="radio" name="shape" onchange="change_shape(this)" id="cb51" />
+                        <label for="cb51" class="cb">
+                          <div class="elements-color rounded p-4" 
+                               style="background:url('https://cdn.shopify.com/s/files/1/0511/8522/1811/files/couple-removebg-preview.png?v=1639509008');
+                                      background-size: contain;">
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-3 bg-tiles">
+                      <div>
+                        <input type="radio" name="shape" onchange="change_shape(this)" id="cb21" />
+                        <label for="cb21" class="cb">
+                          <div class="elements-color rounded p-4" 
+                               style="background:url('https://cdn.shopify.com/s/files/1/0511/8522/1811/files/like-removebg-preview.png?v=1639509533'); background-size: contain;">
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="options row">
+                    <div class="col-3 bg-tiles">
+                      <div>
+                        <input type="radio" name="shape" onchange="change_shape(this)" id="cb18" />
+                        <label for="cb18" class="cb">
+                          <div class="elements-color rounded p-4" 
+                               style="background:url('https://cdn.shopify.com/s/files/1/0452/6410/9729/files/girl.png?v=1604243149'); background-size: contain;">
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-3 bg-tiles">
+                      <div>
+                        <input type="radio" name="shape" onchange="change_shape(this)" id="cb19" />
+                        <label for="cb19" class="cb">
+                          <div class="elements-color rounded p-4" 
+                               style="background:url('https://cdn.shopify.com/s/files/1/0511/8522/1811/files/Screenshot_from_2020-11-19_18-19-36-removebg-preview.png?v=1639509686'); background-size: contain;    background-repeat: no-repeat;background-position: center;">
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-3 bg-tiles">
+                      <div>
+                        <input type="radio" name="shape" onchange="change_shape(this)" id="cb52" />
+                        <label for="cb52" class="cb">
+                          <div class="elements-color rounded p-4" 
+                               style="background:url('https://cdn.shopify.com/s/files/1/0511/8522/1811/files/Screenshot_from_2020-11-23_21-43-42-removebg-preview.png?v=1639509826'); background-size: contain;background-repeat: no-repeat;
+                                      background-position: center;">
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-3 bg-tiles">
+                      <div>
+                        <input type="radio" name="shape" onchange="change_shape(this)" id="cb53" />
+                        <label for="cb53" class="cb">
+                          <div class="elements-color rounded p-4" 
+                               style="background:url('https://cdn.shopify.com/s/files/1/0511/8522/1811/files/Screenshot_from_2020-11-23_21-43-53-removebg-preview.png?v=1639510201'); background-size: contain;background-repeat: no-repeat;
+                                      background-position: center;">
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <label class="subheader" id="__subheaderMapColor">Choose a Color</label>
+                  <div class="row form-group">
+                    <div class="col color-tiles">
+                      <label>
+                        <input class="celestialColor" onchange="change_background('#000000')" id="celestialColorBlack" type="radio" name="celestialColor" value="#000000" checked="checked"> 
+                        <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/1st.png?v=1639511053" alt="Schwarze Sternenkarte"> 
+                      </label>
+                    </div>
+                    <div class="col color-tiles">
+                      <label>
+                        <input class="celestialColor" onchange="change_background('#333744')" id="celestialColorGrey" type="radio" name="celestialColor" value="#333744"> 
+                        <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/2nd.png?v=1639511053" alt="Graue Sternenkarte"> </label>
+                    </div>
+                    <div class="col color-tiles">
+                      <label>
+                        <input class="celestialColor" onchange="change_background('#6c6e78')" id="celestialColorBlue" type="radio" name="celestialColor" value="#6c6e78"> 
+                        <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/3rd.png?v=1639511053" alt="Blaue Sternenkarte"> </label>
+                    </div>
+                    <div class="col color-tiles">
+                      <label>
+                        <input class="celestialColor" onchange="change_background('#0f1d42')" id="celestialColorTurquoise" type="radio" name="celestialColor" value="#0f1d42"> 
+                        <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/4th.png?v=1639511053" alt="Türkise Sternenkarte"> </label>
+                    </div>
+                  </div>
+
+                  <div class="row form-group">
+                    <div class="col color-tiles">
+                      <label>
+                        <input class="celestialColor" onchange="change_background('#025D8C')" id="celestialColorBlack" type="radio" name="celestialColor" value="#025D8C"> 
+                        <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/5th.png?v=1639511053" alt="Schwarze Sternenkarte"> 
+                      </label>
+                    </div>
+                    <div class="col color-tiles">
+                      <label>
+                        <input class="celestialColor" onchange="change_background('#d48290')" id="celestialColorGrey" type="radio" name="celestialColor" value="#d48290"> 
+                        <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/6th.png?v=1639511053" alt="Graue Sternenkarte"> </label>
+                    </div>
+                    <div class="col color-tiles">
+                      <label>
+                        <input class="celestialColor" onchange="change_background('#2c8a98')" id="celestialColorBlue" type="radio" name="celestialColor" value="#2c8a98"> 
+                        <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/7th.png?v=1639511053" alt="Blaue Sternenkarte"> </label>
+                    </div>
+                    <div class="col color-tiles">
+                      <label>
+                        <input class="celestialColor" onchange="change_background('#be2e52')" id="celestialColorTurquoise" type="radio" name="celestialColor" value="#be2e52"> 
+                        <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/8th.png?v=1639511053" alt="Türkise Sternenkarte"> </label>
+                    </div>
+                  </div>
+
+                  <label class="subheader" id="__subheaderBgColor">Choose the background color</label>
+                  <div class="row form-group">
+                    <div class="col bg-tiles">
+                      <input class="celestialBackground" onchange="same_bc(true)" id="celestialBackgroundColor" type="radio" name="celestialBackground" value="000000" checked="checked">
+                      <label id="lbl_celestialBackgroundColor" for="celestialBackgroundColor">Colored</label>
+                    </div>
+                    <div class="col bg-tiles">
+                      <input onchange="same_bc(false)" class="celestialBackground" id="celestialBackgroundWhit" type="radio" name="celestialBackground" value="ffffff" style="text-transform: capitalize">
+                      <label id="lbl_celestialBackgroundWhit" for="celestialBackgroundWhit">Pale</label>
+                    </div>
+                  </div>
+                </div>
+                <div id="bg-3" style="display: none">
+                  <label class="subheader" id="__subheaderBgColor_1">Choose the background</label>
+                  <div class="options row">
+                    <div class="col-4">
+                      <div data-starmap="lines">
+                        <input type="radio" checked="" data-id="Fundal-1" id="cb650" name="background-img" value="https://skymap.click/static/images/1pdf.jpg">
+                        <label for="cb650" class="cb" style="width:100%">
+                          <div class="elements text-center elements-color border rounded p-4 text-white bg-new" id="div_color" style="width: 100%; background-image:url('https://skymap.click/static/images/1pdf.jpg');">
+                            <!--       Black -->
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-4">    
+                      <div data-starmap="grid" class="">
+                        <input type="radio" data-id="Fundal-2" id="cb661" name="background-img" value="https://skymap.click/static/images/2pdf.jpg">
+                        <label for="cb661" class="cb" style="width:100%">
+                          <div class="elements text-center elements-color border rounded p-4 bg-new" style="width:100%;background-image:url('https://skymap.click/static/images/2pdf.jpg')">
+                            <!--       White -->
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-4">    
+                      <div data-starmap="grid" class="">
+                        <input type="radio" data-id="Fundal-3" id="cb6152" name="background-img" value="https://skymap.click/static/images/3pdf.jpg">
+                        <label for="cb6152" class="cb" style="width:100%">
+                          <div class="elements text-center elements-color border rounded p-4 bg-new" style="width:100%;background-image:url('https://skymap.click/static/images/3pdf.jpg')">
+                            <!--       White -->
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+
+                  <div class="options row">
+                    <div class="col-4">
+                      <div data-starmap="lines">
+                        <input type="radio" data-id="Fundal-4" id="cb607" name="background-img" value="https://skymap.click/static/images/4pdf.jpg">
+                        <label for="cb607" class="cb" style="width:100%">
+                          <div class="elements text-center elements-color border rounded p-4 text-white bg-new" id="div_color" style="width: 100%; background-image:url('https://skymap.click/static/images/4pdf.jpg');">
+                            <!--       Black -->
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-4">    
+                      <div data-starmap="grid" class="">
+                        <input type="radio" data-id="Fundal-5" id="cb631" name="background-img" value="https://skymap.click/static/images/5pdf.jpg">
+                        <label for="cb631" class="cb" style="width:100%">
+                          <div class="elements text-center elements-color border rounded p-4 bg-new" style="width:100%;background-image:url('https://skymap.click/static/images/5pdf.jpg')">
+                            <!--       White -->
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-4">    
+                      <div data-starmap="grid" class="">
+                        <input type="radio" id="cb6121" data-id="Fundal-6" name="background-img" value="https://skymap.click/static/images/6pdf.jpg">
+                        <label for="cb6121" class="cb" style="width:100%">
+                          <div class="elements text-center elements-color border rounded p-4 bg-new" style="width:100%;background-image:url('https://skymap.click/static/images/6pdf.jpg')">
+                            <!--       White -->
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+              <div id="accordion-step2">
+                <div class="card">
+                  <div class="card-header collapsed" id="design" data-toggle="collapse" data-target="#collapseDesign" aria-expanded="false" aria-controls="collapseMoment">
+                    <p class="panel-title accordion-toggle"><strong id="__subheaderOptions2">More Options</strong></p>
+                  </div>
+                  <div id="collapseDesign" class="collapse" aria-labelledby="design" data-parent="#accordion-step2">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label class="control-label-left title-submenu" for="border" id="__subheaderShowBorder">Show Border</label>
+                        <div class="controls">
+                          <input data-on="Yes" data-off="No" id="celestialBorder" type="checkbox" onchange="show_border()" name="border" data-toggle="toggle" data-onstyle="secondary">
+                        </div>
+                      </div>
+
+                      <div id="fontDetails-container" style="display: none;">
+                        <label class="control-label-left title-submenu" id="__subheaderFontBottom">Select a font for the bottom text</label>
+                        <div class="row form-group">
+                          <div class="col bg-tiles ml-3">
+                            <input class="fontTypeDetails" id="details-fonts1" type="radio" name="fontTypeDetails" value="Walking-Dream" checked="checked">
+                            <label id="details-font1" for="details-fonts1">Abc</label>
+                          </div>
+                          <div class="col bg-tiles">
+                            <input class="fontTypeDetails" id="details-fonts2" type="radio" name="fontTypeDetails" value="Black-Sword">
+                            <label id="details-font2" for="details-fonts2">Abc</label>
+                          </div>
+                          <div class="col bg-tiles">
+                            <input class="fontTypeDetails" id="details-fonts3" type="radio" name="fontTypeDetails" value="Myriad-Pro">
+                            <label id="details-font3" for="details-fonts3">Abc</label>
+                          </div>
+                          <div class="col bg-tiles">
+                            <input class="fontTypeDetails" id="details-fonts4" type="radio" name="fontTypeDetails" value="Yulinda-Script">
+                            <label id="details-font4" for="details-fonts4">Abc</label>
+                          </div>
+                          <div class="col bg-tiles">
+                            <input class="fontTypeDetails" id="details-fonts5" type="radio" name="fontTypeDetails" value="Kacst-Qurn">
+                            <label id="details-font5" for="details-fonts5">عربى</label>
+                          </div>
+                          <div class="col bg-tiles mr-3">
+                            <input class="fontTypeDetails" id="details-fonts6" type="radio" name="fontTypeDetails" value="SH-Roq">
+                            <label id="details-font6" for="details-fonts6"></label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab">
+              <div class="row-container">
+
+                <div class="no-js-hidden d-none" id="price-{{ section.id }}" {{ block.shopify_attributes }}>
+                 <span class="my-price">{{ current_variant.price | money }}</span>
+                </div>
+                <select id="product-select" name="id">
+                  {% for variant in product.variants %}
+                    <option value="{{ variant.id }}"
+                      {% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
+                    >
+                      {{ variant.title }} - {{ variant.price | money }}
+                    </option>
+                  {% endfor %}
+                </select>
+                <variant-radios class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}" {{ block.shopify_attributes }}>
+                  {%- for option in product.options_with_values -%}
+                  <fieldset class="js product-form__input row mt-4" id="la_{{option.name}}">
+                    <legend class="form__label">{{ option.name }}</legend>
+                    {%- for value in option.values -%}
+                    <input type="radio" id="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                           name="{{ option.name }}"
+                           value="{{ value | escape }}"
+                           form="product-form-{{ section.id }}"
+                           {% if option.selected_value == value %}checked{% endif %}
+                           >
+                    <label onclick="clickVar('{{ value | escape }}')" for="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}" class="col-4 cb {% if value == 'Medium 60x40cm' %}d-none{% endif %}">
+                      {% if value == 'Small 30x40cm' %}
+                      <div id='cm30x40' class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" data-js-option-value=""><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_8.png?v=1650835302" alt="Premium Poster">
+                        </div><div class="col-12"><p>30x40cm</p></div></div></div>
+                      {% elsif value == 'Extra-Small 21x30cm' %}
+                      <div id='cm21x30' class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer"><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_7.png?v=1650835302" alt="Premium Poster">
+                        </div><div class="col-12"><p>21x30cm</p></div></div></div>
+                      {% elsif value == 'A4' %}
+                      <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer"><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_6.png?v=1650835302" alt="Premium Poster">
+                        </div><div class="col-12"><p>{{ value }} size</p></div></div></div>
+                        {% elsif value == 'A2' %}
+                        <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer"><div class="row"><div class="col-12">
+                          <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_5.png?v=1650835302" alt="Premium Poster">
+                          </div><div class="col-12"><p>{{ value }} size</p></div></div></div>
+                      {% elsif value == 'A3' %}
+                      <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer"><div class="row"><div class="col-12">
+                      <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_4.png?v=1650835302" alt="Premium Poster">
+                      </div><div class="col-12"><p>{{ value }} size</p></div></div></div>
+                      {% elsif value == 'Medium 50x40cm' or value == 'Medium 60x40cm' %}
+                      <div {% if value == 'Medium 60x40cm' %}id='cm60x40'{% else %}id='cm50x40'{% endif %} class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer"><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_9.png?v=1650835302" alt="Premium Poster">
+                        </div><div class="col-12"><p>{% if value == 'Medium 50x40cm' %}50x40cm{% else %}60x40cm{% endif %}</p></div></div></div>
+                      {% elsif value == 'Large 50x70cm' %}
+                      <div id='cm50x70' class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer"><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_10.png?v=1650835302" alt="Premium Poster">
+                        </div><div class="col-12"><p>50x70cm</p></div></div></div>
+                      {% elsif value == '70x100' %}
+                      <div id='cm70x100' class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_11.png?v=1650835303" alt="Premium Poster">
+                        </div><div class="col-12"><p>70x100</p></div></div></div>
+                      
+                      
+                      
+                       {% elsif value == 'None' %}
+                      <div id='none-f' class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/none.png?v=1606739031" alt="Premium Poster">
+                        </div><div class="col-12"><p>{{ value }} </p></div></div></div>
+                       {% elsif value == 'Black' %}
+                      <div id='black-f' class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/black.png?v=1606739031" alt="Premium Poster">
+                        </div><div class="col-12"><p>{{ value }} </p></div></div></div>
+                       {% elsif value == 'White' %}
+                      <div id='white-f' class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/white.png?v=1606739031" alt="Premium Poster">
+                        </div><div class="col-12"><p>{{ value }} </p></div></div></div>
+                      
+                      
+                      
+                      {% elsif value == 'Poster' %}
+                      <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/poster.png?v=1606739031" alt="Premium Poster">
+                        </div><div class="col-12"><p>{{ value }}</p></div></div></div>
+                      {% elsif value == 'Canvas' %}
+                      <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/canvas.png?v=1606739031" alt="Premium Poster">
+                        </div><div class="col-12"><p>{{ value }}</p></div></div></div>
+                      {% elsif value == 'Hanging Frame' %}
+                      <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                        <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0612/6754/2242/files/abstract-art.png?v=1637435741" alt="Premium Poster">
+                        </div><div class="col-12"><p>{{ value }}</p></div></div></div>
+                      {% elsif value == 'Framed' %}
+                <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                  <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0612/6754/2242/files/poster_1.png?v=1637435337" alt="Premium Poster">
+                  </div><div class="col-12"><p>{{ value }}</p></div></div></div>
+
+                  {% elsif  value == 'Black Framed' %}
+                  <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                    <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_1.png?v=1650833865" alt="Premium Poster">
+                    </div><div class="col-12"><p>{{ value }}</p></div></div></div>
+
+                    {% elsif  value == 'White Framed' %}
+                  <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                    <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_3.png?v=1650833992" alt="Premium Poster">
+                    </div><div class="col-12"><p>{{ value }}</p></div></div></div>
+
+                    {% elsif  value == 'Wooden Framed' %}
+                  <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                    <img width="100px" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0558/3650/8343/files/icons8-frame-50_2.png?v=1650833865" alt="Premium Poster">
+                    </div><div class="col-12"><p>{{ value }}</p></div></div></div>
+
+                      {% elsif value == 'Digital File' %}
+                      <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" ><div class="row"><div class="col-12">
+                        <img width="70" class="img-fluid " src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/digital.png?v=1606739031" alt="Premium Poster">
+                        </div><div class="col-12"><p>{{ value }}</p></div></div></div>
+                      {% else %}
+                      <div class="product-options__value product-options__value--text d-flex flex-center border cursor-pointer" style="align-items: center;justify-content: center;"><div class="row"><div class="col-12">
+                        </div><div class="col-12"><p style="color: #000;">{{ value }}</p></div></div></div>
+                      {% endif %}
+                    </label>
+                    {%- endfor -%}
+                  </fieldset>
+                  {%- endfor -%}
+                  <script type="application/json">
+                    {{ product.variants | json }}
+                  </script>
+                </variant-radios>
+
+
+                <noscript class="product-form__noscript-wrapper-{{ section.id }}">
+                  <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
+                    <label class="form__label" for="Variants-{{ section.id }}">{{ 'products.product.product_variants' | t }}</label>
+                    <div class="select">
+                      <select name="id" id="Variants-{{ section.id }}" class="select__select" form="{{ product_form_id }}">
+                        {%- for variant in product.variants -%}
+                        <option
+                                {% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
+                                {% if variant.available == false %}disabled{% endif %}
+                                value="{{ variant.id }}"
+                                >
+                          {{ variant.title }}
+                          {%- if variant.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}
+                        - {{ variant.price | money | strip_html }}
+                        </option>
+                        {%- endfor -%}
+                      </select>
+                    </div>
+                  </div>
+                </noscript>
+                {%- form 'product', product, id: 'mySubmitForm', class: "form d-flex flex-column w-100 m-0 mt-5", novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" disabled>
+                <input name="properties[OrderID]" type="hidden" id="order_id"/>
+                <input name="properties[Model]" type="hidden" id="model_id"/>
+                <input name="properties[Image]" type="file" class="d-none" id="img_id"/>
+                <input name="properties[Background]" type="hidden" id="fundal_id"/>
+                <input name="properties[Location of your moment]" type="hidden" id="location_id"/> 
+                <input name="properties[Color]" type="hidden" id="mapcolor_id"/> 
+                <input name="properties[Background Color]" type="hidden" id="backgroundcolor_id"/> 
+                <input name="properties[Selected Shape]" type="hidden" id="shape_id"/> 
+                <input name="properties[Data & Time]" type="hidden" id="date_id"/> 
+                <input name="properties[Custom Message Title]" type="hidden" id="message_id"/>
+                <input name="properties[Title]" type="hidden" id="title_id"/>
+                <input name="properties[Elements]" type="hidden" id="moon_id"/>
+                <input name="properties[_final-img-url]" type="hidden" id="final-url"/>
+                <input type="hidden" name="variant_id" value="{{ current_variant.id }}" data-js-product-variant-input>
+                <div class="product-page-info__options mb-15">
+
+                  <div class="d-flex">
+
+
+                    <div class="w-100">
+                      <div class="product-page-info__button-add-to-cart mb-10">
+                        {% comment %} <p class="text-danger hide-on-loc"><em>Nu ai selectat locatia! Mergi la sectiunea Moment si asigura-te ca selectezi locatia.</em></p> {% endcomment %}
+                        <button  id="cartBut" onclick="submit_form()" style="padding:15px" type="button" class="btn-dark text-center butDisable btn btn--size-large btn--full btn--status{% if settings.buttons_animation_icon_enable %} btn--animated{% endif %}" name="add"{% unless is_quick_view %} data-js-trigger-id="add-to-cart" data-js-button-add-to-cart-clone-id="footbar"{% endunless %} data-js-product-button-add-to-cart{% unless current_variant.available %} disabled="disabled" data-button-status="sold-out"{% elsif variant_pre_order %} data-button-status="pre-order"{% else %}{% if enable_select_variant_button %} data-button-status="select" data-button-select-disable{% endif %}{% endunless %} disabled>
+                          <span id="sold-available" class="flex-center">
+                            <span class="btn__text">Add to cart </span><span class="my-price">{{ current_variant.price | money }}</span>
+                            </span>
+                          <span id="sold-out">Sold Out</span>
+                        </button>
+                        <div class="main py-2 text-white text-center bg-danger my-2 hide-on-loc" onclick="$('a#__textMoment').click()" id="hiddenDiv">
+                          CLICK HERE TO ENTER PLACE & PROCEED
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endform %}
+                </div>
+                <div class="row-container last-row-container">
+                  <label id="lbl_productType"> <span><strong id="__subheaderDetails">Product Description</strong></span>
+                    <br> <span id="__productDetails-1">
+                    {{product.description}}
+                    <p class="p-price" id="__priceTagDetails">
+                      <span> 
+                        <span class="my-price">{{ current_variant.price | money }}
+                        </span>
+                      </span> 
+<!--                       incl. VAT -->
+                    </p>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="footer-container col-12 col-lg-4 col-xl-3">
+              <div class="button-group bottom-align-text">
+                <button class="btn-custom nextBtn" type="button" id="nextBtn">Next</button>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+

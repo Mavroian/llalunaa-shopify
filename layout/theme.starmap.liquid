@@ -1,0 +1,502 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_button }}">
+
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    <link rel="preconnect" href="https://monorail-edge.shopifysvc.com">
+
+    {%- if canonical_url != blank  -%}
+    <link rel="canonical" href="{{ canonical_url }}">
+    {%- endif -%}
+
+    {%- if settings.favicon != blank -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+    {%- endif -%}
+
+    {%- capture seo_title -%}
+    {%- if request.page_type == 'search' and search.performed == true -%}
+    {{ 'general.search.heading' | t: count: search.results_count }}: {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+    {%- else -%}
+    {{ page_title }}
+    {%- endif -%}
+    {%- if current_tags -%}
+    {%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+    {%- endif -%}
+    {%- if current_page != 1 -%}
+    &ndash; {{ 'general.meta.page' | t: page: current_page }}
+    {%- endif -%}
+    {%- assign escaped_page_title = page_title | escape -%}
+    {%- unless escaped_page_title contains shop.name -%}
+    &ndash; {{ shop.name }}
+    {%- endunless -%}
+    {%- endcapture -%}
+    <title>{{ seo_title | strip }}</title>
+
+    {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- assign og_title = page_title | default: shop.name -%}
+    {%- assign og_url = canonical_url | default: shop.url -%}
+    {%- assign og_type = 'website' -%}
+    {%- assign og_description = page_description | default: shop.description | default: shop.name -%}
+
+    {% if request.page_type == 'product' %}
+    {%- assign og_type = 'product' -%}
+    {% endif %}
+
+    <meta property="og:site_name" content="{{ shop.name }}">
+    <meta property="og:url" content="{{ og_url }}">
+    <meta property="og:title" content="{{ og_title }}">
+    <meta property="og:type" content="{{ og_type }}">
+    <meta property="og:description" content="{{ og_description | escape }}">
+
+    {% if request.page_type == 'product' %}
+    <meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
+    <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+    {% endif %}
+
+    {% unless settings.social_twitter_link == blank %}
+    <meta name="twitter:site" content="{{ settings.social_twitter_link | split: 'twitter.com/' | last | prepend: '@' }}">
+    {% endunless %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ og_title }}">
+    <meta name="twitter:description" content="{{ og_description | escape }}">
+
+
+    <script>
+      if (sessionStorage.getItem("backToCollection")) {
+        sessionStorage.removeItem("backToCollection")
+      }
+
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+
+    {{ content_for_header }}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/celestial.css?v=1605711305" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" />
+    <link rel="stylesheet" href="https://www.karangoyal.cc/static/assets/starmap/flatpicker.css" />
+    <link rel="stylesheet" href="https://skymap.click/static/js/karan/mystyles.css" />
+    <link rel="stylesheet" href="https://skymap.click/data/mycss.css?domain={{shop.domain}}" />
+    
+  </head>
+
+  <body class="template-{{ request.page_type | handle }}">
+
+
+    <main class="main-content js-focus-hidden" id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+
+
+    <script type="application/json" data-cart-routes>
+    {
+      "cartUrl": "{{ routes.cart_url }}",
+      "cartAddUrl": "{{ routes.cart_add_url }}",
+      "cartChangeUrl": "{{ routes.cart_change_url }}"
+    }
+    </script>
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/calender.js?v=1605711305"></script>
+    <script src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/d3.min.js?v=1605711305"></script>
+    <script src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/d3.geo.projection.min.js?v=1605711305"></script>
+    <script src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/celestial.js?v=1605711306"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.1.4/flatpickr.min.js"></script>
+    {% section 'starmap-api-keys' %}
+    <script src="https://cdn.shopify.com/s/files/1/0511/8522/1811/files/qrcode.js?v=1640076506"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>    
+    <script type="text/javascript" src="https://starymap.com/wp-content/themes/flatsome-child/assets/bootstrap4-toggle.min.js?ver=5.3.2"></script>
+
+    <script type="text/javascript">
+      Celestial.display({
+        form: false,
+        formFields: {download: true},
+        datapath: "https://ofrohn.github.io/data/",
+        timezoneid: "OZJZSV28I4V8",
+        background: {        // Background style
+          fill: "#000000",   // Area fill
+          opacity: 1, 
+          stroke: "#ffffff", // Outline
+          width: 2
+        },
+        stars: {
+          style: { fill: "#ffffff", opacity: 1 },
+        },  
+
+        constellations: {
+          names: false,      // Show constellation names 
+          namesType: "iau", // Type of name Latin (iau, default), 3 letter designation (desig) or other language (see list below)
+          nameStyle: { fill:"#ffffff", align: "center", baseline: "middle", 
+                      font: ["20px Helvetica, Arial, sans-serif",  // Style for constellations
+                             "16px Helvetica, Arial, sans-serif",  // Different fonts for diff.
+                             "14px Helvetica, Arial, sans-serif"]},// ranked constellations
+          lineStyle: { stroke: "#cccccc", width: 1, opacity: 0.6 }, 
+        },
+      });
+
+      var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width : 100,
+        height : 100,
+        useSVG: true,
+        colorDark : '#000',
+        colorLight : '#fff',
+        correctLevel : QRCode.CorrectLevel.H
+      });
+
+      function makeCode () {		
+        var elText = document.getElementById("qr-input");
+
+        if (!elText.value) {
+          qrcode.clear();
+          //           alert("Input a text");
+          elText.focus();
+          return;
+        }
+
+        qrcode.makeCode(elText.value);
+      }
+    </script>
+
+    <script>
+      var inspiration =  {
+        "Anniversary": [
+          "You are made of stardust\nand wishes and magical things\n\n❤",
+          "This day, under these stars,\nwe bound our hands and hearts together forever\nand began the adventure of a lifetime.\n\n❤",
+          "The magical night you stole my heart! ❤",
+          "THE STARS ALIGNED THE DAY WE MET\n\n❤️",
+          "♡ OUR FIRST DATE ♡",
+          "Be the creator of your magical life.",
+          "Happy anniversary to my one and only.\nI will never find the words to say how much I love you\nI love you so much! Happy anniversary!",
+          "Happy marriage is not a fairy tale, nor a myth.\nI used to believe it never existed until I met you two.\n\nHappy anniversary!",
+          "This day, under these stars,\nwe bound our hands and hearts together forever\nand began the adventure of a lifetime.",
+          "The day you asked me to be yours.",
+          "I fell in love right at the moment I saw you.\nI never thought I’d ever have you on my side.\nBut now, I’m sure that we are meant to be together forever.\n\nHappy anniversary!",
+          "THE NIGHT SKY\nWHEN YOU AND I BECAME WE",
+          "Thanks for your unconditional love for me.\nYou have made feel special in every day\nand in every moment since I married you.\n\nHappy anniversary!",
+          "The magical night sky over our heads when you said Yes",
+          "THE DAY WE MET\n\n♥",
+          "∞ YOU AND ME, THEN, NOW AND FOREVER. ∞\n\nI LOVE YOU.\n♡",
+          "UNDER THIS STARRY SKY\nOUR STORY BEGAN\n\n♡",
+          "My life is full of mistakes but the only thing \nI did right was marrying you.\nYou are the best wife in this world.\nHappy anniversary to you!",
+          "THE NIGHT WE MET AND KISSED\nAND THE STARS THAT HELD THEIR BREATH\nAS I LOST MINE",
+          "T H E   S T A R T   O F   U S"
+        ],
+        "Baby": [
+          "The moon danced with the stars\nthe night you were born\n\n❤️",
+          "FIRST WE HAD EACH OTHER\nTHEN WE HAD YOU\nNOW WE HAVE EVERYTHING\n\n❤️",
+          "Born under million of stars to be my one in a million.\n\n⭐",
+          "You are never to small to be awesome.\n\n🧸",
+          "A STAR IS BORN!\n\n⭐",
+          "Still the most magical day of my life\nwas the day I became a mom\n\n🧸",
+          "Welcome to the world little one.\n\nWishing you a lifetime of\nhappiness, laughter, and joy.",
+          "We love you more than there are stars in the sky.\n\n❤️",
+          "UNDER THIS SKY,\nLOVE IS BORN.",
+          "Sleepless nights are more than worth it with your little one.\nTheir bright eyes and glowing hearts make the best night lights.\n\n⭐",
+          "You are loved little one\n\n❤️❤️❤️",
+          "Booties and bonnets, ribbons and lace,\nlittle stuffed toys all over the place.\n\nCongratulations on your sweet little girl.",
+          "When Love Becomes Life\nHappiness Gets A Name",
+          "Let me love you a little more\nbefore you’re not little anymore\n\n♡",
+          "The littlest feet make the\nbiggest footprints in our hearts.\n\nEnjoy this love. ❤️",
+          "To the soon to be parents!\nWishing you a hassle-free pregnancy.",
+          "The night our little star was born. 👶",
+          "Enjoy the magic a baby introduces to your life!\nMay your days be filled with laughter,\npeace and happy memories to cherish forever!",
+          "Happiness is homemade\n\n😊",
+          "Plenty of good wishes and big kisses are coming your way!\n\nCongratulations on your upcoming little one,\nwe’re so excited for your growing family.",
+          "All my best to your little miracle."
+        ],
+        "Birthday": [
+          "Count your life by smiles, not tears.\nCount your age by friends, not years.\n\nHappy birthday 🥳",
+          "Today is the day you were brought into this world.\nMay this day be filled with lots of wonderful memories,\ncoloured with sparkles of love,\nglow of smiles and warmth of friendship.\nHappy birthday 🥳",
+          "Happy Birthday 🎉\n\nWe love you forever",
+          "May this day be filled with lots of wonderful memories,\ncoloured with sparkles of love,\nglow of smiles and warmth of friendship.",
+          "Happy birthday to someone who is forever young!",
+          "Can’t stop loving you.\nYou are such a cute thing!\n\nHappy birthday",
+          "A wish for you on your birthday,\nwhatever you ask may you receive,\nwhatever you seek may you find,\nwhatever you wish may it be fulfilled\nHappy birthday!",
+          "You are the most precious gift we have ever got in our life.\nWe will always love you!\nHappy birthday ❤️",
+          "May every day be as happy as this day.\n\nHappy birthday!",
+          "You are only young once,\nbut you can be immature for a lifetime.\nHappy birthday!",
+          "May the joy that you have spread in the past\ncome back to you on this day.\nWishing you a very happy birthday! ❤️",
+          "I hope all of your hopes and dreams come true\non this very special day. Happy birthday to you!\n\n🥳",
+          "Happy birthday!\n\nYour life is just about to pick up speed\nand blast off into the stratosphere.\nWear a seat belt and be sure to enjoy the journey.",
+          "I wish for all of your wishes to come true.\nHappy birthday!\n\n♡",
+          "May you be gifted with life’s biggest joys\nand never-ending bliss.\nAfter all, you yourself are a gift to earth,\nso you deserve the best.\nHappy birthday.🎉",
+          "You look younger than ever!\nHappy birthday!",
+          "Be happy!\nToday is the day you were brought into this world\nto be a blessing and inspiration to the people around you!\nYou are a wonderful person! May you be given more birthdays\nto fulfill all of your dreams!",
+          "Don’t get all weird about getting older!\nOur age is merely the number of years\nthe world has been enjoying us!\n\n😊"
+        ],
+        "Love": [
+          "There is never a time or place for true love.\nIt happens, in a heartbeat!",
+          "I   L O V E   Y O U\nI C H   L I E B E   D I C H\nT E   Q U I E R O\nJ E   T'A I M E\n사 랑 해",
+          "\n\nReal love storys never have endings. ❤",
+          "You make me happy\nin a way no one else can\n- I love you -",
+          "From this day forward, you shall not walk alone.\nMy heart will be your shelter\nand my arms will be your home!\n\n❤",
+          "I love you more than life itself.",
+          "We shine brighter than the stars in the sky.\n\n⭐",
+          "If two hearts are meant to be together,\nno matter how long it takes,\nhow far they go,\nhow tough it seems,\nfate will bring them together to share their love forever.",
+          "When I look into the dark night sky,\nI am reminded of how lucky I am to have found you.\nThank you for giving me more than the world.\n\nTo you, I owe the universe. ❤",
+          "We've been making the best memories\nfrom the moment the stars were like this.\n\nAnd we'll keep making memories\nuntil the moment we are the stars.",
+          "Not even the stars outnumber the things I love about you!",
+          "There ain't no me if there ain't no you.\n\n❤",
+          "You keep me safe,\nI´ll keep you wild.\n\n😊",
+          "I will never finish falling in love with you! ❤",
+          "Everything is better with you.\nEverything has been better since you.",
+          "I love loving you!",
+          "I love you not only for what you are,\nbut for what I am when I am with you.\n\n❤",
+          "There is only one happiness in life to love and to be loved.\n\n❤",
+          "Some people search their whole lives to find what I found in you.",
+          "A L L   O F   M E\nL O V E S   A L L   O F   Y O U !\n\n❤",
+          "You are just so beautiful, both inside and outside.\nI must be so lucky that I was able to find you in this big world,\nand make you mine.\n\n♡",
+          "You always give me a million little reasons to smile.\nI have never had anyone in my life who was so amazing as you.\n\nI love you!",
+          "The magical moment it all began.",
+          "You carry my heart with you.\nAs long as you’re with me, I have nothing to fear\nbecause I know my heart is safe with you.",
+          "Right from the very beginning,\nI knew that I'd found a home for my heart.",
+          "I love you to infinity and beyond",
+          "My greatest fantasies are the ones\nthat start with you and end with you.\n\nI love you truly madly and deeply!",
+          "You are the reason for my smile and my happiness.\n\nI love you!",
+          "I followed you no matter what\nand you did the same.\n\nI love you ♡",
+          "The beginning of our story.",
+          "When I look into the dark night sky,\nI am reminded of how lucky I am to have found you.\nThank you for giving me more than the world.\nTo you, I owe the universe.",
+          "Nothing in this world can replace your place in my heart because you own it.",
+          "The gleam of your eyes is what I fell for.\nI will never let tears come to those beautiful eyes.\nI promise to keep you happy, always.",
+          "They say love can’t be seen, it can only be felt.\nBut they were wrong. I have seen it many times.\nI have seen true love for me in your eyes.\nAnd it’s the most beautiful thing I have ever seen!",
+          "If you ask me when I want to be with you,\nmy answer will be – now and forever.",
+          "Only the stars saw when we fell for each other ♡",
+          "You are the brightest star\nthat lights up my life every day."
+        ],
+        "Poets": [
+          "“It is not in the stars to hold our destiny but in ourselves.”\n\n— William Shakespeare",
+          "“When it rains look for rainbows, when it's dark look for stars.”\n\n— Oscar Wilde",
+          "“Dwell on the beauty of life.\nWatch the stars, and see yourself running with them.”\n\n— Marcus Aurelius",
+          "“Call it magic, call it true\nI call it magic when I'm with you.”\n\n– Coldplay",
+          "“We carry inside us the wonders we seek outside us.”\n\n– Rumi",
+          "“Circumstances are the rulers of the weak;\nthey are but the instruments of the wise.”\n\n— Samuel Lover",
+          "“Nothing in the world is ever completely wrong.\nEven a stopped clock is right twice a day.”\n\n– Paulo Coelho ",
+          "“Only he who attempts the absurd is capable of achieving the impossible.”\n\n– Miguel de Unamuno",
+          "“Discipline your mind to see the good in every situation\nand look on the best side of every event.”\n\n– Roy T. Bennett",
+          "“If you have a strong purpose in life, you don't have to be pushed.\nYour passion will drive you there.”\n\n– Roy T. Bennett",
+          "“The same boiling water that softens the potato hardens the egg.\nIt's about what you're made of, not the circumstances.”\n\n– Unknown",
+          "“Whatever the mind can conceive and believe,\nit can achieve.”\n\n –Napoleon Hill",
+          "“The only way of discovering the limits of the possible\nis to venture a little way past them into the impossible.”\n\n— Arthur C. Clarke",
+          "“Action may not always bring happiness;\nbut there is no happiness without action.”\n\n― Benjamin Disraeli",
+          "“The second star to the right shines in the night for you...“\n\n― Peter Pan",
+          "“Maybe that's what life is...\na wink of the eye and winking stars.“\n\n― Jack Kerouac",
+          "“A smooth sea never made a skilled sailor.“\n\n— Franklin D. Roosevelt",
+          "“All the darkness in the world cannot extinguish the light of a single candle.“\n\n— St. Francis Of Assisi",
+          "“Keep your face always toward the sunshine-\nand shadows will fall behind you.“\n\n― Walt Whitman",
+          "“What is done in love is done well.“\n\n— Vincent van Gogh",
+          "“Wake up with determination.\nGo to bed with satisfaction.“\n\n– Unknown",
+          "“The man who moves a mountain begins by carrying away small stones.“\n\n― Confucius",
+          "“Life is a journey to be experienced not a problem to be solved.“\n\n– Winnie The Pooh",
+          "“'Cause you're a sky, 'cause you're a sky full of stars\nI'm gonna give you my heart.\n'Cause you're a sky, 'cause you're a sky full of stars\n'Cause you light up the path.“\n– Coldplay",
+          "“We are all stars and we deserve to twinkle.“\n\n– Marylin Monroe",
+          "“The best thing to hold onto in life is each other.“\n\n– Audrey Hepburn",
+          "“Kiss me under the light of a thousand stars.\nPlace your head on my beating heart,\nI'm thinking out loud...\nMaybe we found love right where we are.“\n– Ed Sheeran",
+          "“The second star to the right shines in the night for you\nto tell you that the dreams you plan\nreally can come true…“\n\n– Peter Pan",
+          "“The moment you fell inside my dreams\nI realized all I had not seen.“\n\n– Cat Stevens",
+          "“It's that heart of gold & stardust soul\nthat makes you beautiful.“\n\n–R.M. Broderick",
+          "“Be humble for you are made of earth.\nBe noble for you are made of stars.”\n\n— Serbian Proverb",
+          "“I loved you once, I loved you twice.\nI loved you in my previous lives.\nAnd when I die, just keep in mind...\nI'll love you in another life.”\n— Blackbriar",
+          "“True friends never apart maybe in distance but never in heart.“\n\n— Helen Keller ",
+          "“You are my sun, my moon, and all my stars.“\n\n— Edward Estlin Cummings",
+          "“What you think, you become.\nWhat you feel, you attract.\nWhat you imagine, you create.”\n\n— Buddha",
+          "“Everything is going to be fine in the end.\nIf it's not fine it's not the end.”\n\n— Oscar Wilde ",
+          "“Shoot for the moon.\nEven if you miss, you'll land among the stars.”\n\n‒ Oscar Wilde",
+          "“The future belongs to those\nwho believe in the beauty of their dreams.”\n\n― Eleanor Roosevelt",
+          "“For my part I know nothing with any certainty,\nbut the sight of the stars makes me dream.“\n\n― Vincent van Gogh",
+          "“There ain't no me\nif there ain't no you!“\n\n― Dean Winchester",
+          "“Doubt thou the stars are fire,\nDoubt that the sun doth move,\nDoubt truth to be a liar,\nBut never doubt I love.“\n— William Shakespeare",
+          "“Look up at the stars and not down at your feet.\nTry to make sense of what you see,\nand wonder about what makes the universe exist.“\n\n— Stephen Hawking",
+          "“Wherever you go, go with all your heart.“\n\n– Confucius",
+          "“I wonder whether the stars are set alight in heaven\nso that one day each one of us may find his own again...”\n\n― Antoine de Saint-Exupéry",
+          "“Words, words were truly alive on the tongue, in the head\nWarm, beating, frantic, winged; music and blood\nBut then I was young.”\n\n― from Little Red Cap by Carol Ann Duffy",
+          "“I don't write poems to melt your heart.\nI write them, so our hearts can melt together.”\n\n― Subhan Zein",
+          "Hope is the thing with feathers —\nThat perches in the soul —\nAnd sings the tune without the words —\nAnd never stops at all —\nby Emily Dickinson",
+          "“I wrote a song for you today when I was sitting in my room,\nI jumped up on the bed today and played it on the broom.\nI didn't think that it would be a song that you would hear,\nBut when I played it in my head I made you reappear.”\n― Saul Williams",
+          "“But we were a maybe\nand never a must\nwhen it should have been us.”\n\n― Lang Leav",
+          "“Moonlight drowns out all\nbut the brightest stars.”\n\n— J.R.R Tolkein",
+          "“You are a child of the universe,\nno less than the trees and the stars;\nyou have a right to be here.\nAnd whether or not it is clear to you,\nno doubt the universe is unfolding as it should.”",
+          "“In your sky, you are the brightest star.\nWithout you light, it’s dark like tar.\nSo love yourself to enlighten others.”\n\n― Debasish Mridha",
+          "“I feared this once, but I never knew\nThat a sky so black, was once so blue”\n― Billy J. Barnum",
+          "“Love at the lips was touch\nAs sweet as I could bear\nAnd once that seemed too much\nI lived on air.”\n― Robert Frost"
+        ],
+        "Night Sky": [
+          "\n\nThe night my life got more magical.",
+          "The love between you two,\nshines as brightly as the stars in the sky.",
+          "As long as stars twinkle in the sky,\ntill the water runs dry\nand till the day I die,\nI will be yours and you will be mine.\n❤",
+          "“We are all stars and we deserve to twinkle.“\n\n– Marylin Monroe",
+          "“For my part I know nothing with any certainty,\nbut the sight of the stars makes me dream.“\n\n― Vincent van Gogh",
+          "“You are my sun, my moon, and all my stars.“\n\n— Edward Estlin Cummings",
+          "“Be humble for you are made of earth.\nBe noble for you are made of stars.”\n\n— Serbian Proverb",
+          "“It's that heart of gold & stardust soul\nthat makes you beautiful.“\n\n–R.M. Broderick",
+          "The stars and the moon,\nwhen we both said\n“I do.“",
+          "Everyone you meet is a star\nuntil one of them becomes your sun.",
+          "There were many stars the night we fell in love\nbut the only one that shined through my heart\nwas you.",
+          "Starry nights I've seen a few...\nBut never did they shine as bright,\nas when I watched them next to you.",
+          "Born under million of stars to be my one in a million.\n\n⭐",
+          "We shine brighter than the stars in the sky.\n\n⭐",
+          "“When it rains look for rainbows, when it's dark look for stars.”\n\n— Oscar Wilde ",
+          "“Dwell on the beauty of life.\nWatch the stars, and see yourself running with them.”\n\n— Marcus Aurelius",
+          "“Moonlight drowns out all\nbut the brightest stars.”\n\n— J.R.R Tolkein",
+          "That night,\nthe sky was full of stars\nand my heart full of love.",
+          "YOU ARE MY SUN,\nMY MOON AND\nALL MY STARS ",
+          "Everyone wants to be someone's sun\nto light up someone's life,\nbut why not be someone's moon\nto brighten in the darkest hour.\n❤",
+          "The moment our stars aligned",
+          "ON THIS DAY,\nUNDER THESE STARS,\nWE STARTED OUR AMAZING JOURNEY TOGETHER",
+          "\n\nI love you to the moon and back ♡",
+          "\n\n⭐ The stars above us ⭐",
+          "“Maybe that's what life is...\na wink of the eye and winking stars.“\n\n― Jack Kerouac",
+          "Look at the stars.\nLook how they shine for you\nand everything you do.",
+          "BUT WITHOUT THE DARK\nWE WOULD NOT SEE THE STARS\n\n♡",
+          "OUR LUCKY STARS\n⭐⭐⭐",
+          "It was written in the stars that night we met\nthat we would be together forever\n\n❤️",
+          "“The second star to the right shines in the night for you...“\n\n― Peter Pan",
+          "At night when you look at the sky\nnotice the brightest star.... that's you!\n\nThe rest of the universe is the love I feel for you."
+        ],
+        "Wedding": [
+          "We’ll collect the moments one by one,\nI guess that’s how the future’s done.\n\n🧑‍🤝‍🧑",
+          "The love between you two,\nshines as brightly as the stars in the sky.",
+          "It was the day I married my best friend,\nthe most magical day I didn’t want to end.\nFriends and family gathered from all around,\nto celebrate and share the love we had found.\n∞",
+          "I would rather share one lifetime with you\nthan face all the ages of this world alone.",
+          "\n\nAnd suddenly all of my love songs were about you.",
+          "Marriages, like a garden, take time to grow.\nBut the harvest is rich unto those\nwho patiently and tenderly care for the ground.",
+          "THE DAY WHEN WE SAID\n\n”YES”",
+          "My most brilliant achievement was my ability\nto be able to persuade my wife to marry me.",
+          "He’s more myself than I am.\nWhatever our souls are made of,\nhis and mine are the same.",
+          "\n\nYou put your arms around me and i’m home.",
+          "You are the answer to every prayer I’ve offered.\nYou are a song, a dream, a whisper,\nand I don’t know how I could have lived without you\nfor as long as I have.",
+          "Once in a while,\nright in the middle of an ordinary life,\nlove gives us a fairy tale.",
+          "To my fiancé,\nI absolutely can’t wait to be married to you.",
+          "Waking up next to you every day is nothing but a pure blessing.\nYou have my whole heart, sunshine.\nThank you for being always there for me!",
+          "\n\nYou are my today and all of my tomorrows.",
+          "Love doesn’t make the world go round;\nlove is what makes the ride worthwhile.\n\n❤️",
+          "\nI always knew it was you.\n\n❤️",
+          "A great marriage is not when the ‘perfect couple’ comes together.\nIt is when an imperfect couple learns to enjoy their differences.\n\n∞",
+          "Two souls with but a single thought; two hearts that beat as one.\n\n💕",
+          "HOME IS WHEREVER\nI AM WITH YOU",
+          "From this day forward, you shall not walk alone.\nMy heart will be your shelter\nand my arms will be your home.",
+          "Today I married my  best friend.\nThe one I laugh with, live for, and dream with.",
+          "To the world you may be one person,\nbut to one person you are the world.",
+          "\n\nYou will forever be my always.",
+          "When you realize you want to spend the rest of your life with somebody,\nyou want the rest of your life to start as soon as possible.",
+          "Being deeply loved by someone gives you strength,\nwhile loving someone deeply gives you courage.\n\n❤️",
+          "\n\nYou and me.\nIt’s a forever kind of thing.",
+          "Thank you for being the most amazing wife,\nthanks for giving me many reasons to live my life to the fullest.\nYou are my perfect one."
+        ],
+        "Mothers Day": [
+          "A mother is your first friend,\nyour best friend,\nyour forever friend.",
+          "What is a mom\nbut the sunshine of our days\nand the North Star of our nights?",
+          "The stars on the day you welcomed me into the world\nand became the best mum in the world!",
+          "A mother is the one\nwho fills your heart in the first place.\n\n— Amy Tan",
+          "Any woman can be a mother,\nbut it takes someone special to be called “Mom.”\n\nMom, you’re the best! 💕",
+          "My amazing mother:\nI don’t know what I’d have done without you.\n\nLove always. ❤️",
+          "“Moms are like buttons -\nthey hold everything together”",
+          "“Mother is the heartbeat in the home\nand without her, there seems to be no heart throb.”\n\n— Leroy Brownlow",
+          "Just for Mother’s Day,\nI’d like to give you a big hug\nor a million dollars,\nwhichever you prefer.\nBIG HUG – Do I know my mom, or what?",
+          "“Motherhood - All love begins and ends there”\n\n— Robert Browning",
+          "It’s no wonder that such a wonderful wife\nturned out to be such a wonderful mother too!\n\n❤️",
+          "“Mothers are like glue.\nEven when you can’t see them,\nthey’re still holding the family together.”\n\n— Susan Gale",
+          "\nThanks for being the greatest!\n\n♡",
+          "You too, my mother, read my rhymes\nFor the love of unforgotten times,\nAnd you may chance to hear once more\nThe little feet along the floor.\nTo My Mother — Robert Louis Stevenson",
+          "“Once you're a mom, you're always a mom.\nIt's like riding a bike, you never forget”\n\n— Taraji P. Henson",
+          "“A mother's arms are more comforting than anyone else's”\n\n— Princess Diana",
+          "We’ve shared so many things —\nbut I don’t share with you enough\nhow much I love you!\n\n❤️",
+          "Mom, I love you,\neven though I’ll never accept\nyour friend request. 😘",
+          "“There’s no way to be a perfect mother,\nand a million ways to be a good one”\n\n— Jill Churchill",
+          "\nThanks for always giving your best!\n\n❤️",
+          "“The most beautiful word on the lips of mankind is the word 'Mother',\nand the most beautiful call is the call of 'My Mother'.”\n\n— Kahlil Gibran",
+          "May your day be filled with love and joy.\nI feel so blessed to have you as my Mom.\n\n♡ I love you ♡",
+          "“All that I am,\nor ever hope to be,\nI owe to my angel mother”\n\n— Abraham Lincoln",
+          "I love how we don’t even have to say out loud\nthat I’m your favorite child. ❤️",
+          "“God couldn’t be everywhere,\nand therefore he made mothers”\n\n— Rudyard Kipling",
+          "To the most caring,\ngenerous and loving mother.\n\nWe love you. ❤️",
+          "It takes someone special to be a wonderful wife,\na magnificent mom, a fantastic friend, an incomparable companion,\nthe perfect partner - someone like you!\n\nHappy Mother’s Day, with all my love.",
+          "“A mother's love endures through all.”\n\n— Washington Irving",
+          "“Mother's love is peace.\nIt need not be acquired,\nit need not be deserved.”\n\n— Erich Fromm",
+          "I’d made you breakfast in bed\nif you’d taught me how to cook. 🤭",
+          "“Sometimes the strength of motherhood\nis greater than natural laws”\n\n— Barbara Kingsolver"
+
+        ]
+        // 		"Mothers never really die,\nthey just keep house in the sky.\nThey polish the sun by day\nand light the stars that shine at night,\nkeep the moonbeams silvery bright\nand in the heavenly home above,\nthey wait to welcome those they love.",
+
+      }
+    </script>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="__headerModal">Inspiration</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+          </div>
+          <div class="modal-header-categories text-center">
+
+            <div class="btn-group-toggle" data-toggle="buttons">
+              <label class="btn btn-modal active">
+                <input type="radio" name="categories" id="option1" value="Anniversary" autocomplete="off" checked="">Anniversary
+              </label>
+              <label class="btn btn-modal">
+                <input type="radio" name="categories" id="option2" value="Baby" autocomplete="off">Baby
+              </label>
+              <label class="btn btn-modal">
+                <input type="radio" name="categories" id="option3" value="Birthday" autocomplete="off">Birthday
+              </label>
+              <label class="btn btn-modal">
+                <input type="radio" name="categories" id="option5" value="Love" autocomplete="off">Love
+              </label>
+              <label class="btn btn-modal">
+                <input type="radio" name="categories" id="option6" value="Mothers Day" autocomplete="off">Mother's Day
+              </label>
+              <label class="btn btn-modal">
+                <input type="radio" name="categories" id="option7" value="Night Sky" autocomplete="off">Night Sky
+              </label>
+              <label class="btn btn-modal">
+                <input type="radio" name="categories" id="option8" value="Poets" autocomplete="off">Poets
+              </label>
+              <label class="btn btn-modal">
+                <input type="radio" name="categories" id="option9" value="Wedding" autocomplete="off">Wedding
+              </label>
+            </div>
+          </div>
+          <div class="modal-body list-group" id="sayingItems" role="tablist">
+            <a class="list-group-item list-group-item-action saying-item" data-toggle="list" role="tab" aria-controls="home" aria-selected="false">
+              <p class="text-center mb-0 pre">
+                <small>My life is full of mistakes but the only thing I did right was marrying you.<br>You are the best wife in this world. Happy anniversary to you!</small>
+              </p>
+            </a>
+            <a class="list-group-item list-group-item-action saying-item" data-toggle="list" role="tab" aria-controls="home" aria-selected="false">
+              <p class="text-center mb-0 pre">
+                <small>My life is full of mistakes but the only thing I did right was marrying you.<br>You are the best wife in this world. Happy anniversary to you!</small>
+              </p>
+            </a>
+            <a class="list-group-item list-group-item-action saying-item" data-toggle="list" role="tab" aria-controls="home" aria-selected="false">
+              <p class="text-center mb-0 pre">
+                <small>My life is full of mistakes but the only thing I did right was marrying you.<br>You are the best wife in this world. Happy anniversary to you!</small>
+              </p>
+            </a>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn-gold" id="confirmSaying" data-target="#sayingItems">Save message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<script src="https://skymap.click/data/myjs.js?domain={{shop.domain}}&v=7"></script>
+  </body>
+</html>
